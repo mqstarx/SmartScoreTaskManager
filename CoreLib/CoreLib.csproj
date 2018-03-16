@@ -7,8 +7,8 @@
     <ProjectGuid>{453AAFFD-1887-4449-8AE9-7FA1C2AEF446}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NetworkClasses</RootNamespace>
-    <AssemblyName>NetworkClasses</AssemblyName>
+    <RootNamespace>CoreLib</RootNamespace>
+    <AssemblyName>CoreLib</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
