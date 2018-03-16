@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ClientPanel.Properties
+namespace AdminPanel.Properties
 {
 
 

@@ -1,4 +1,4 @@
-﻿namespace SmartScoreTaskManager
+﻿namespace OperatorPanel
 {
     partial class Form1
     {
