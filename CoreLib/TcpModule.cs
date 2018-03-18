@@ -216,7 +216,7 @@ namespace CoreLib
 
 
         //public string SendFileName = null;
-        public void SendData(object obj,string message)
+        public void SendData(object obj,string message,ProtocolOfExchange protokolMsg,object info)
         {
             // Состав отсылаемого универсального сообщения
             // 1. Заголовок о следующим объектом класса подробной информации дальнейших байтов
@@ -225,7 +225,8 @@ namespace CoreLib
 
             SendInfo si = new SendInfo();
             si.message = message;
-
+            si.ProtocolMsg = protokolMsg;
+            si.InfoObject = info;
 
             //  Если нет сообщения и отсылаемого файла продолжать процедуру отправки нет смысла.
             if (String.IsNullOrEmpty(si.message) == true && obj==null) return;
@@ -525,9 +526,9 @@ namespace CoreLib
     public class SendInfo
     {
         public string message;
-        public int datasize;
-       
-       // public object obj;
+        public int datasize;       
+        public ProtocolOfExchange ProtocolMsg;
+        public object InfoObject;
     }
 
     ///////////////////////////////////////////////////////////////////////////

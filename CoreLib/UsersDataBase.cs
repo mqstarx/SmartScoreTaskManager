@@ -25,11 +25,11 @@ namespace CoreLib
         /// <returns></returns>
         public bool Add(User item)
         {
-           foreach (User user in m_Users)
+          /* foreach (User user in m_Users)
             {
-                if (user.Id == item.Id)
+                if (user.Id == item.Id && user.IdParent == item.IdParent)
                     return false;
-            }
+            }*/
             m_Users.Add(item);
             return true;
         }
@@ -81,6 +81,20 @@ namespace CoreLib
         {
             get { return m_Users[index]; }
             
+        }
+
+        /// <summary>
+        ///  используется для передачи информации о пользователях по сети
+        /// </summary>
+        /// <returns> возвращает список объектов userinfo(без паролей)</returns>
+        public List<UserInfo> GetListUserInfo()
+        {
+            List<UserInfo> _userList = new List<UserInfo>();
+            foreach(User user in this)
+            {
+                _userList.Add(new UserInfo(user.Id, user.IdParent, user.FullName, user.PostName));
+            }
+            return _userList;
         }
 
         public IEnumerator GetEnumerator()
