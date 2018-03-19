@@ -97,13 +97,13 @@ namespace CoreLib
         /// Запускает сервер, прослушивающий все IP адреса, и одновременно
         /// метод асинхронного принятия (акцептирования) клиентов.
         /// </summary>
-        public void StartServer()
+        public void StartServer(int port)
         {
             if (modeNetwork == Mode.indeterminately)
             {
                 try
                 {
-                    _tcpListener = new TcpListener(IPAddress.Any, 15000);
+                    _tcpListener = new TcpListener(IPAddress.Any, port);
                     _tcpListener.Start();
                     _tcpListener.BeginAcceptTcpClient(AcceptCallback, _tcpListener);
                     modeNetwork = Mode.Server;
@@ -147,12 +147,12 @@ namespace CoreLib
         /// Попытка асинхронного подключения клиента к серверу
         /// </summary>
         /// <param name="ipserver">IP адрес сервера</param>
-        public void ConnectClient(string ipserver)
+        public void ConnectClient(string ipserver,int port)
         {
             if (modeNetwork == Mode.indeterminately)
             {
                 _tcpClient = new TcpClientData();
-                _tcpClient.tcpClient.BeginConnect(IPAddress.Parse(ipserver), 15000, new AsyncCallback(ConnectCallback), _tcpClient);
+                _tcpClient.tcpClient.BeginConnect(IPAddress.Parse(ipserver), port, new AsyncCallback(ConnectCallback), _tcpClient);
 
                 modeNetwork = Mode.Client;
             }
@@ -229,7 +229,7 @@ namespace CoreLib
             si.InfoObject = info;
 
             //  Если нет сообщения и отсылаемого файла продолжать процедуру отправки нет смысла.
-            if (String.IsNullOrEmpty(si.message) == true && obj==null) return;
+            if (si.message == null && obj==null && info==null) return;
 
             byte[] _obj_arr;// = new byte[10];
             if (obj != null)

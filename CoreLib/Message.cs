@@ -13,9 +13,13 @@ namespace CoreLib
         private FileAttachments m_FileAttachments;
         private bool m_IsReaded;
         private bool m_IsSync;
-        private int m_FromId;
-        private int m_ToId;
+        private UserInfo m_FromId;
+        private UserInfoMessage[] m_ToId;
         private string m_UidMsg;
+
+        private DateTime m_DateTimeOfMessage;
+
+
 
         public string Msg
         {
@@ -59,21 +63,7 @@ namespace CoreLib
             }
         }
 
-        /// <summary>
-        /// Указывает нужно ли синхронизировать
-        /// </summary>
-        public bool IsSync
-        {
-            get
-            {
-                return m_IsSync;
-            }
-
-            set
-            {
-                m_IsSync = value;
-            }
-        }
+      
 
         public string UidMsg
         {
@@ -85,7 +75,9 @@ namespace CoreLib
 
         }
 
-        public Message(string msg,int from,int to)
+      
+
+        public Message(string msg,UserInfo from,UserInfoMessage[] to)
         {
             m_Msg = msg;
             m_FromId = from;
@@ -96,6 +88,7 @@ namespace CoreLib
             Random rnd2 = new Random((int)DateTime.Now.Ticks+rnd1.Next());
             Thread.Sleep(10);
             m_UidMsg = rnd2.Next().ToString()+sha;
+            m_DateTimeOfMessage = DateTime.Now;
 
         }
     }

@@ -125,5 +125,10 @@ namespace CoreLib
             m_UserBalans = 0;
         }
 
+        public override string ToString()
+        {
+            return m_PostName + ": " + m_FullName;
+        }
+
     }
 }

@@ -25,11 +25,11 @@ namespace CoreLib
         /// <returns></returns>
         public bool Add(User item)
         {
-          /* foreach (User user in m_Users)
+           foreach (User user in m_Users)
             {
-                if (user.Id == item.Id && user.IdParent == item.IdParent)
+                if (user.PostName == item.PostName)
                     return false;
-            }*/
+            }
             m_Users.Add(item);
             return true;
         }
@@ -84,6 +84,21 @@ namespace CoreLib
         }
 
         /// <summary>
+        /// возвращает объект класса User по id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public User GetUserObject(int id)
+        {
+            foreach(User user in this)
+            {
+                if (user.Id == id)
+                    return user;
+            }
+            return null;
+        }
+
+        /// <summary>
         ///  используется для передачи информации о пользователях по сети
         /// </summary>
         /// <returns> возвращает список объектов userinfo(без паролей)</returns>
@@ -95,6 +110,25 @@ namespace CoreLib
                 _userList.Add(new UserInfo(user.Id, user.IdParent, user.FullName, user.PostName));
             }
             return _userList;
+        }
+
+        /// <summary>
+        /// аутентификация пользователя
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="passwordSha256"></param>
+        /// <returns></returns>
+        public bool IsUserAuth(int id,string passwordSha256)
+        {
+            foreach(User user in this)
+            {
+                if(user.Id == id)
+                {
+                    if (Hash.getHashSha256(Hash.DecodeString(user.Password)) == passwordSha256)
+                        return true;
+                }
+            }
+            return false;
         }
 
         public IEnumerator GetEnumerator()
