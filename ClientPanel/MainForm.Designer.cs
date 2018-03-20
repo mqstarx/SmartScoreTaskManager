@@ -29,16 +29,28 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.connectionStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.TimeOutTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl = new System.Windows.Forms.TabControl();
             this.MessagesTab = new System.Windows.Forms.TabPage();
+            this.messagesListView = new System.Windows.Forms.ListView();
+            this.To = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.outBoxRadioBtn = new System.Windows.Forms.RadioButton();
+            this.inboxRadioBtn = new System.Windows.Forms.RadioButton();
+            this.newMessageBtn = new System.Windows.Forms.Button();
             this.TasksPage = new System.Windows.Forms.TabPage();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.frommsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.have_attachments = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.statusStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.MessagesTab.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip
@@ -77,7 +89,8 @@
             // 
             // MessagesTab
             // 
-            this.MessagesTab.Controls.Add(this.listBox1);
+            this.MessagesTab.Controls.Add(this.messagesListView);
+            this.MessagesTab.Controls.Add(this.groupBox1);
             this.MessagesTab.Location = new System.Drawing.Point(4, 22);
             this.MessagesTab.Name = "MessagesTab";
             this.MessagesTab.Padding = new System.Windows.Forms.Padding(3);
@@ -85,6 +98,76 @@
             this.MessagesTab.TabIndex = 0;
             this.MessagesTab.Text = "Сообщения";
             this.MessagesTab.UseVisualStyleBackColor = true;
+            // 
+            // messagesListView
+            // 
+            this.messagesListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.messagesListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.To,
+            this.frommsg,
+            this.message,
+            this.date,
+            this.have_attachments});
+            this.messagesListView.FullRowSelect = true;
+            this.messagesListView.GridLines = true;
+            this.messagesListView.Location = new System.Drawing.Point(189, 6);
+            this.messagesListView.Name = "messagesListView";
+            this.messagesListView.Size = new System.Drawing.Size(913, 486);
+            this.messagesListView.SmallImageList = this.imageList1;
+            this.messagesListView.TabIndex = 1;
+            this.messagesListView.UseCompatibleStateImageBehavior = false;
+            this.messagesListView.View = System.Windows.Forms.View.Details;
+            // 
+            // To
+            // 
+            this.To.Text = "Кому:";
+            this.To.Width = 244;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.outBoxRadioBtn);
+            this.groupBox1.Controls.Add(this.inboxRadioBtn);
+            this.groupBox1.Controls.Add(this.newMessageBtn);
+            this.groupBox1.Location = new System.Drawing.Point(8, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(175, 129);
+            this.groupBox1.TabIndex = 0;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Сообщения";
+            // 
+            // outBoxRadioBtn
+            // 
+            this.outBoxRadioBtn.AutoSize = true;
+            this.outBoxRadioBtn.Location = new System.Drawing.Point(14, 94);
+            this.outBoxRadioBtn.Name = "outBoxRadioBtn";
+            this.outBoxRadioBtn.Size = new System.Drawing.Size(83, 17);
+            this.outBoxRadioBtn.TabIndex = 2;
+            this.outBoxRadioBtn.Text = "Исходящие";
+            this.outBoxRadioBtn.UseVisualStyleBackColor = true;
+            // 
+            // inboxRadioBtn
+            // 
+            this.inboxRadioBtn.AutoSize = true;
+            this.inboxRadioBtn.Checked = true;
+            this.inboxRadioBtn.Location = new System.Drawing.Point(14, 60);
+            this.inboxRadioBtn.Name = "inboxRadioBtn";
+            this.inboxRadioBtn.Size = new System.Drawing.Size(76, 17);
+            this.inboxRadioBtn.TabIndex = 1;
+            this.inboxRadioBtn.TabStop = true;
+            this.inboxRadioBtn.Text = "Входящие";
+            this.inboxRadioBtn.UseVisualStyleBackColor = true;
+            // 
+            // newMessageBtn
+            // 
+            this.newMessageBtn.Location = new System.Drawing.Point(6, 19);
+            this.newMessageBtn.Name = "newMessageBtn";
+            this.newMessageBtn.Size = new System.Drawing.Size(163, 23);
+            this.newMessageBtn.TabIndex = 0;
+            this.newMessageBtn.Text = "Новое сообщение";
+            this.newMessageBtn.UseVisualStyleBackColor = true;
+            this.newMessageBtn.Click += new System.EventHandler(this.newMessageBtn_Click);
             // 
             // TasksPage
             // 
@@ -96,19 +179,31 @@
             this.TasksPage.Text = "Задачи";
             this.TasksPage.UseVisualStyleBackColor = true;
             // 
-            // listBox1
+            // frommsg
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "1",
-            "23"});
-            this.listBox1.Location = new System.Drawing.Point(8, 26);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBox1.Size = new System.Drawing.Size(503, 485);
-            this.listBox1.TabIndex = 0;
+            this.frommsg.Text = "От кого: ";
+            this.frommsg.Width = 238;
+            // 
+            // message
+            // 
+            this.message.Text = "Сообщение";
+            this.message.Width = 201;
+            // 
+            // date
+            // 
+            this.date.Text = "Дата";
+            this.date.Width = 158;
+            // 
+            // have_attachments
+            // 
+            this.have_attachments.Text = "Файлы:";
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "skrepka2.gif");
+            this.imageList1.Images.SetKeyName(1, "skrepka.png");
             // 
             // MainForm
             // 
@@ -124,6 +219,8 @@
             this.statusStrip.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.MessagesTab.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -135,7 +232,17 @@
         private System.Windows.Forms.Timer TimeOutTimer;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage MessagesTab;
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TabPage TasksPage;
+        private System.Windows.Forms.ListView messagesListView;
+        private System.Windows.Forms.ColumnHeader To;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton outBoxRadioBtn;
+        private System.Windows.Forms.RadioButton inboxRadioBtn;
+        private System.Windows.Forms.Button newMessageBtn;
+        private System.Windows.Forms.ColumnHeader frommsg;
+        private System.Windows.Forms.ColumnHeader message;
+        private System.Windows.Forms.ColumnHeader date;
+        private System.Windows.Forms.ColumnHeader have_attachments;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }

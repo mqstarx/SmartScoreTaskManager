@@ -55,7 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserFile.cs" />
     <Compile Include="UserInfo.cs" />
-    <Compile Include="UserInfoMessage.cs" />
     <Compile Include="UsersDataBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

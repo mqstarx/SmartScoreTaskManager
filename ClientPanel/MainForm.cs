@@ -144,5 +144,17 @@ namespace ClientPanel
             SendReqest(ProtocolOfExchange.AddUser, new User(2, 1, Hash.EncodeString("1q2w3e"), "Герасимова Елизаветта Сергеевна", "Главный конструктор"), null, "");
             Thread.Sleep(20);
         }
+
+
+        #region работа с вкладкой сообщения
+
+        private void newMessageBtn_Click(object sender, EventArgs e)
+        {
+            NewMessageForm newMsg = new NewMessageForm();
+            newMsg.UserList = m_UserInfoArray;
+            newMsg.Show(this);
+        }
+
+        #endregion
     }
 }

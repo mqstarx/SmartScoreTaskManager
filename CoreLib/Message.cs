@@ -14,7 +14,7 @@ namespace CoreLib
         private bool m_IsReaded;
         private bool m_IsSync;
         private UserInfo m_FromId;
-        private UserInfoMessage[] m_ToId;
+        private UserInfo m_ToId;
         private string m_UidMsg;
 
         private DateTime m_DateTimeOfMessage;
@@ -75,9 +75,37 @@ namespace CoreLib
 
         }
 
-      
+        public UserInfo FromId
+        {
+            get
+            {
+                return m_FromId;
+            }
 
-        public Message(string msg,UserInfo from,UserInfoMessage[] to)
+          
+        }
+
+        public UserInfo ToId
+        {
+            get
+            {
+                return m_ToId;
+            }
+
+            
+        }
+
+        public DateTime DateTimeOfMessage
+        {
+            get
+            {
+                return m_DateTimeOfMessage;
+            }
+
+            
+        }
+
+        public Message(string msg,UserInfo from,UserInfo to)
         {
             m_Msg = msg;
             m_FromId = from;
