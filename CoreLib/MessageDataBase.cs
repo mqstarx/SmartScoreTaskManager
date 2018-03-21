@@ -18,18 +18,18 @@ namespace CoreLib
         public void NewMessage(Message msg)
         {
             // добавляем в  базу отправителя и сохраняем в файл сообщение  
-            List<Message> msgArrayfrom = (List<Message>)Func.LoadConfig(@"Messages\From\"+msg.FromId.Id.ToString()+".bin");
+            List<Message> msgArrayfrom = (List<Message>)Func.LoadConfig(@"\Messages\From\"+msg.FromId.Id.ToString()+".bin");
             if (msgArrayfrom == null)
                 msgArrayfrom = new List<Message>();
             msgArrayfrom.Add(msg);
-            Func.SaveConfig(msgArrayfrom, @"Messages\From\" + msg.FromId.Id.ToString() + ".bin");
+            Func.SaveConfig(msgArrayfrom, @"\Messages\From\" + msg.FromId.Id.ToString() + ".bin");
 
             // добавляем в  базу получателя и сохраняем в файл сообщение  
-            List<Message> msgArrayTo= (List<Message>)Func.LoadConfig(@"Messages\To\" + msg.ToId.Id.ToString() + ".bin");
+            List<Message> msgArrayTo= (List<Message>)Func.LoadConfig(@"\Messages\To\" + msg.ToId.Id.ToString() + ".bin");
             if (msgArrayTo == null)
                 msgArrayTo = new List<Message>();
             msgArrayTo.Add(msg);
-            Func.SaveConfig(msgArrayTo, @"Messages\To\" + msg.ToId.Id.ToString() + ".bin");
+            Func.SaveConfig(msgArrayTo, @"\Messages\To\" + msg.ToId.Id.ToString() + ".bin");
 
         }
 

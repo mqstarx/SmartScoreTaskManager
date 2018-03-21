@@ -71,6 +71,27 @@ namespace CoreLib
 
             return false;
         }
+        /// <summary>
+        /// изменение пользователя начальника пользователя
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="id_parent_new"></param>
+        /// <returns></returns>
+        public bool ChangeUserParent(int id,int id_parent_new)
+        {
+            for (int i = 0; i < m_Users.Count; i++)
+            {
+                if (m_Users[i].Id == id)
+                {
+                    m_Users[i].IdParent = id_parent_new;
+                    
+                    
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// возвращает объект класса User по индексу

@@ -307,6 +307,11 @@ namespace CoreLib
 
         #endregion
 
+        public override string ToString()
+        {
+            IPEndPoint ip = (IPEndPoint)_tcpClient.tcpClient.Client.RemoteEndPoint;
+            return ip.Address.ToString();
+        }
 
         #region Асинхронные методы сетевой работы TCP модуля
 

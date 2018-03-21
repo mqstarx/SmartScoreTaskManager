@@ -35,6 +35,7 @@
             this.rememberCxb = new System.Windows.Forms.CheckBox();
             this.showSymbols = new System.Windows.Forms.CheckBox();
             this.OkAuth = new System.Windows.Forms.Button();
+            this.exitBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // userCmb
@@ -103,11 +104,22 @@
             this.OkAuth.UseVisualStyleBackColor = true;
             this.OkAuth.Click += new System.EventHandler(this.OkAuth_Click);
             // 
+            // exitBtn
+            // 
+            this.exitBtn.Location = new System.Drawing.Point(18, 130);
+            this.exitBtn.Name = "exitBtn";
+            this.exitBtn.Size = new System.Drawing.Size(139, 23);
+            this.exitBtn.TabIndex = 7;
+            this.exitBtn.Text = "Выход из приложения";
+            this.exitBtn.UseVisualStyleBackColor = true;
+            this.exitBtn.Click += new System.EventHandler(this.exitBtn_Click);
+            // 
             // AuthorizationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(582, 171);
+            this.Controls.Add(this.exitBtn);
             this.Controls.Add(this.OkAuth);
             this.Controls.Add(this.showSymbols);
             this.Controls.Add(this.rememberCxb);
@@ -137,5 +149,6 @@
         private System.Windows.Forms.Button OkAuth;
         public System.Windows.Forms.ComboBox userCmb;
         public System.Windows.Forms.TextBox passwordTxb;
+        private System.Windows.Forms.Button exitBtn;
     }
 }

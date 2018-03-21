@@ -37,16 +37,17 @@
             this.MessagesTab = new System.Windows.Forms.TabPage();
             this.messagesListView = new System.Windows.Forms.ListView();
             this.To = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.outBoxRadioBtn = new System.Windows.Forms.RadioButton();
-            this.inboxRadioBtn = new System.Windows.Forms.RadioButton();
-            this.newMessageBtn = new System.Windows.Forms.Button();
-            this.TasksPage = new System.Windows.Forms.TabPage();
             this.frommsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.have_attachments = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.outBoxRadioBtn = new System.Windows.Forms.RadioButton();
+            this.inboxRadioBtn = new System.Windows.Forms.RadioButton();
+            this.newMessageBtn = new System.Windows.Forms.Button();
+            this.TasksPage = new System.Windows.Forms.TabPage();
+            this.SyncMessageBtn = new System.Windows.Forms.Button();
             this.statusStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.MessagesTab.SuspendLayout();
@@ -89,6 +90,7 @@
             // 
             // MessagesTab
             // 
+            this.MessagesTab.Controls.Add(this.SyncMessageBtn);
             this.MessagesTab.Controls.Add(this.messagesListView);
             this.MessagesTab.Controls.Add(this.groupBox1);
             this.MessagesTab.Location = new System.Drawing.Point(4, 22);
@@ -124,6 +126,32 @@
             // 
             this.To.Text = "Кому:";
             this.To.Width = 244;
+            // 
+            // frommsg
+            // 
+            this.frommsg.Text = "От кого: ";
+            this.frommsg.Width = 238;
+            // 
+            // message
+            // 
+            this.message.Text = "Сообщение";
+            this.message.Width = 201;
+            // 
+            // date
+            // 
+            this.date.Text = "Дата";
+            this.date.Width = 158;
+            // 
+            // have_attachments
+            // 
+            this.have_attachments.Text = "Файлы:";
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "skrepka2.gif");
+            this.imageList1.Images.SetKeyName(1, "skrepka.png");
             // 
             // groupBox1
             // 
@@ -179,31 +207,15 @@
             this.TasksPage.Text = "Задачи";
             this.TasksPage.UseVisualStyleBackColor = true;
             // 
-            // frommsg
+            // SyncMessageBtn
             // 
-            this.frommsg.Text = "От кого: ";
-            this.frommsg.Width = 238;
-            // 
-            // message
-            // 
-            this.message.Text = "Сообщение";
-            this.message.Width = 201;
-            // 
-            // date
-            // 
-            this.date.Text = "Дата";
-            this.date.Width = 158;
-            // 
-            // have_attachments
-            // 
-            this.have_attachments.Text = "Файлы:";
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "skrepka2.gif");
-            this.imageList1.Images.SetKeyName(1, "skrepka.png");
+            this.SyncMessageBtn.Location = new System.Drawing.Point(8, 141);
+            this.SyncMessageBtn.Name = "SyncMessageBtn";
+            this.SyncMessageBtn.Size = new System.Drawing.Size(175, 23);
+            this.SyncMessageBtn.TabIndex = 2;
+            this.SyncMessageBtn.Text = "Синхронизировать";
+            this.SyncMessageBtn.UseVisualStyleBackColor = true;
+            this.SyncMessageBtn.Click += new System.EventHandler(this.SyncMessageBtn_Click);
             // 
             // MainForm
             // 
@@ -214,6 +226,7 @@
             this.Controls.Add(this.statusStrip);
             this.Name = "MainForm";
             this.Text = "MainForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
@@ -244,5 +257,6 @@
         private System.Windows.Forms.ColumnHeader date;
         private System.Windows.Forms.ColumnHeader have_attachments;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.Button SyncMessageBtn;
     }
 }

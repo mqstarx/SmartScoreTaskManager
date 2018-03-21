@@ -82,5 +82,11 @@ namespace ClientPanel
                 this.Close();
             }
         }
+
+        private void exitBtn_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.No;
+            this.Close();
+        }
     }
 }

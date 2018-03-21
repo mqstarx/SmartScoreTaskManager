@@ -15,6 +15,7 @@ namespace CoreLib
         private string m_FullName;
         private string m_PostName;
         private int m_UserBalans;
+        private User usr;
 
         /// <summary>
         /// Идентификатор пользователя (должен быть уникальным)
@@ -123,6 +124,11 @@ namespace CoreLib
             m_FullName = fullname;
             m_PostName = postname;
             m_UserBalans = 0;
+        }
+
+        public User(User usr)
+        {
+            this.usr = usr;
         }
 
         public override string ToString()
