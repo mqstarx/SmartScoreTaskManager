@@ -35,19 +35,19 @@
             this.TimeOutTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl = new System.Windows.Forms.TabControl();
             this.MessagesTab = new System.Windows.Forms.TabPage();
+            this.SyncMessageBtn = new System.Windows.Forms.Button();
             this.messagesListView = new System.Windows.Forms.ListView();
-            this.To = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.frommsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.have_attachments = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.from_To = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.messageColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.dateColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.FilesColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.outBoxRadioBtn = new System.Windows.Forms.RadioButton();
             this.inboxRadioBtn = new System.Windows.Forms.RadioButton();
             this.newMessageBtn = new System.Windows.Forms.Button();
             this.TasksPage = new System.Windows.Forms.TabPage();
-            this.SyncMessageBtn = new System.Windows.Forms.Button();
+            this.SyncTimer = new System.Windows.Forms.Timer(this.components);
             this.statusStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.MessagesTab.SuspendLayout();
@@ -101,50 +101,57 @@
             this.MessagesTab.Text = "Сообщения";
             this.MessagesTab.UseVisualStyleBackColor = true;
             // 
+            // SyncMessageBtn
+            // 
+            this.SyncMessageBtn.Location = new System.Drawing.Point(8, 141);
+            this.SyncMessageBtn.Name = "SyncMessageBtn";
+            this.SyncMessageBtn.Size = new System.Drawing.Size(175, 23);
+            this.SyncMessageBtn.TabIndex = 2;
+            this.SyncMessageBtn.Text = "Синхронизировать";
+            this.SyncMessageBtn.UseVisualStyleBackColor = true;
+            this.SyncMessageBtn.Click += new System.EventHandler(this.SyncMessageBtn_Click);
+            // 
             // messagesListView
             // 
             this.messagesListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.messagesListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.To,
-            this.frommsg,
-            this.message,
-            this.date,
-            this.have_attachments});
+            this.from_To,
+            this.messageColumn,
+            this.dateColumn,
+            this.FilesColumn});
             this.messagesListView.FullRowSelect = true;
             this.messagesListView.GridLines = true;
             this.messagesListView.Location = new System.Drawing.Point(189, 6);
             this.messagesListView.Name = "messagesListView";
+            this.messagesListView.ShowItemToolTips = true;
             this.messagesListView.Size = new System.Drawing.Size(913, 486);
             this.messagesListView.SmallImageList = this.imageList1;
             this.messagesListView.TabIndex = 1;
             this.messagesListView.UseCompatibleStateImageBehavior = false;
             this.messagesListView.View = System.Windows.Forms.View.Details;
+            this.messagesListView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.messagesListView_MouseDoubleClick);
             // 
-            // To
+            // from_To
             // 
-            this.To.Text = "Кому:";
-            this.To.Width = 244;
+            this.from_To.Text = "От:/Кому:";
+            this.from_To.Width = 249;
             // 
-            // frommsg
+            // messageColumn
             // 
-            this.frommsg.Text = "От кого: ";
-            this.frommsg.Width = 238;
+            this.messageColumn.Text = "Сообщение:";
+            this.messageColumn.Width = 207;
             // 
-            // message
+            // dateColumn
             // 
-            this.message.Text = "Сообщение";
-            this.message.Width = 201;
+            this.dateColumn.Text = "Дата:";
+            this.dateColumn.Width = 157;
             // 
-            // date
+            // FilesColumn
             // 
-            this.date.Text = "Дата";
-            this.date.Width = 158;
-            // 
-            // have_attachments
-            // 
-            this.have_attachments.Text = "Файлы:";
+            this.FilesColumn.Text = "Файлы:";
+            this.FilesColumn.Width = 113;
             // 
             // imageList1
             // 
@@ -186,6 +193,7 @@
             this.inboxRadioBtn.TabStop = true;
             this.inboxRadioBtn.Text = "Входящие";
             this.inboxRadioBtn.UseVisualStyleBackColor = true;
+            this.inboxRadioBtn.CheckedChanged += new System.EventHandler(this.inboxRadioBtn_CheckedChanged);
             // 
             // newMessageBtn
             // 
@@ -207,15 +215,10 @@
             this.TasksPage.Text = "Задачи";
             this.TasksPage.UseVisualStyleBackColor = true;
             // 
-            // SyncMessageBtn
+            // SyncTimer
             // 
-            this.SyncMessageBtn.Location = new System.Drawing.Point(8, 141);
-            this.SyncMessageBtn.Name = "SyncMessageBtn";
-            this.SyncMessageBtn.Size = new System.Drawing.Size(175, 23);
-            this.SyncMessageBtn.TabIndex = 2;
-            this.SyncMessageBtn.Text = "Синхронизировать";
-            this.SyncMessageBtn.UseVisualStyleBackColor = true;
-            this.SyncMessageBtn.Click += new System.EventHandler(this.SyncMessageBtn_Click);
+            this.SyncTimer.Interval = 2000;
+            this.SyncTimer.Tick += new System.EventHandler(this.SyncTimer_Tick);
             // 
             // MainForm
             // 
@@ -247,16 +250,16 @@
         private System.Windows.Forms.TabPage MessagesTab;
         private System.Windows.Forms.TabPage TasksPage;
         private System.Windows.Forms.ListView messagesListView;
-        private System.Windows.Forms.ColumnHeader To;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton outBoxRadioBtn;
         private System.Windows.Forms.RadioButton inboxRadioBtn;
         private System.Windows.Forms.Button newMessageBtn;
-        private System.Windows.Forms.ColumnHeader frommsg;
-        private System.Windows.Forms.ColumnHeader message;
-        private System.Windows.Forms.ColumnHeader date;
-        private System.Windows.Forms.ColumnHeader have_attachments;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Button SyncMessageBtn;
+        private System.Windows.Forms.ColumnHeader from_To;
+        private System.Windows.Forms.ColumnHeader messageColumn;
+        private System.Windows.Forms.ColumnHeader dateColumn;
+        private System.Windows.Forms.ColumnHeader FilesColumn;
+        private System.Windows.Forms.Timer SyncTimer;
     }
 }

@@ -11,7 +11,7 @@ namespace CoreLib
         AskNewMessages,NewMessages,AskNewTasks,NewTasks,
         NewMessageToUser,NewMessageToUserOk,NewTaskForUser,CheckConnection, CheckConnectionOK,
         AskUserInfoList,UserInfoListOk,AddUser,AddUserOK,TryAuth,AuthOk,AuthFail,SendMessage,MessageDelivered,MessageWaitDelivery,SendMessageFail,
-        SyncMessages,
+        SyncMessages,SyncMessagesStart,SyncMessagesEnd,MessageRead,
 
 
     }

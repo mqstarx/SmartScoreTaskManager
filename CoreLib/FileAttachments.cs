@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace CoreLib
 {
+    [Serializable]
     public class FileAttachments
     {
-        private const int MAX_LEN = 104857600;
+        private const int MAX_LEN = 26214400;
         private List<UserFile> m_Files;
         public FileAttachments()
         {
@@ -67,7 +68,7 @@ namespace CoreLib
         {
             if (paths != null)
             {
-                int sum_file_len = 0;
+                int sum_file_len = GetAllFileLen();
                 for (int i = 0; i < paths.Length; i++)
                 {
                     FileInfo fi = new FileInfo(paths[i]);
@@ -132,5 +133,6 @@ namespace CoreLib
                 return m_Files.Count;
             }
         }
+       
     }
 }

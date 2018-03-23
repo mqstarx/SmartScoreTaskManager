@@ -135,6 +135,10 @@ namespace CoreLib
         {
             return m_PostName + ": " + m_FullName;
         }
+        public UserInfo GetInfo()
+        {
+            return new UserInfo(m_Id, m_IdParent, m_FullName, m_PostName);
+        }
 
     }
 }

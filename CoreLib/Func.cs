@@ -17,6 +17,9 @@ namespace CoreLib
             FileStream fs = null;
             try
             {
+                
+                if(!Directory.Exists(Path.GetDirectoryName(Application.StartupPath + @"\" + filename)))
+                  Directory.CreateDirectory(Path.GetDirectoryName(Application.StartupPath + @"\" + filename));
                 fs = new FileStream(Application.StartupPath + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.Write);
                 BinaryFormatter bf = new BinaryFormatter();
                 bf.Serialize(fs, obj);
@@ -43,6 +46,7 @@ namespace CoreLib
             FileStream fs = null;
             try
             {
+
                 fs = new FileStream(Application.StartupPath + @"\" + filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
                 BinaryFormatter bf = new BinaryFormatter();
                 object res = bf.Deserialize(fs);

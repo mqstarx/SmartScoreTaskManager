@@ -152,6 +152,25 @@ namespace CoreLib
             return false;
         }
 
+        /// <summary>
+        /// аутентификация пользователя
+        /// </summary>
+        /// <param name="info"></param>
+        /// 
+        /// <returns></returns>
+        public bool IsUserAuth(AuthInfo info)
+        {
+            foreach (User user in this)
+            {
+                if (user.Id == info.UserId)
+                {
+                    if (Hash.getHashSha256(Hash.DecodeString(user.Password)) == info.Password)
+                        return true;
+                }
+            }
+            return false;
+        }
+
         public IEnumerator GetEnumerator()
         {
             return ((IEnumerable)m_Users).GetEnumerator();

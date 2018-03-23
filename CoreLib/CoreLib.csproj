@@ -48,6 +48,7 @@
     <Compile Include="Hash.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageDataBase.cs" />
+    <Compile Include="NetworkTransferObjects.cs" />
     <Compile Include="ProtocolOfExchange.cs" />
     <Compile Include="Task.cs" />
     <Compile Include="TcpModule.cs" />

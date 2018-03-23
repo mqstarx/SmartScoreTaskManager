@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server
@@ -39,58 +40,85 @@ namespace Server
         private static void M_Tcp_Receive(object sender, ReceiveEventArgs e)
         {
             TcpModule tcp = (TcpModule)sender;
-            if(e.sendInfo.ProtocolMsg == ProtocolOfExchange.CheckConnection)
+            if(e.SendInfo.ProtocolMsg == ProtocolOfExchange.CheckConnection)
             {
-                tcp.SendData(null, "", ProtocolOfExchange.CheckConnectionOK, null);
+                tcp.SendData(null, ProtocolOfExchange.CheckConnectionOK);
             }
-            if(e.sendInfo.ProtocolMsg== ProtocolOfExchange.AskUserInfoList)
+            if(e.SendInfo.ProtocolMsg== ProtocolOfExchange.AskUserInfoList)
             {
-                tcp.SendData(m_UserDataBase.GetListUserInfo(), "", ProtocolOfExchange.UserInfoListOk, null);
+                NetworkTransferObjects obj = new NetworkTransferObjects();
+                obj.ListUserInfo = m_UserDataBase.GetListUserInfo();
+                tcp.SendData(obj, ProtocolOfExchange.UserInfoListOk);
             }
-            if(e.sendInfo.ProtocolMsg== ProtocolOfExchange.AddUser)
+            if(e.SendInfo.ProtocolMsg== ProtocolOfExchange.AddUser)
             {
-                if(m_UserDataBase.Add((User)e.Object))
+                if(m_UserDataBase.Add(e.NetDataObj.User))
                 {
                     Func.SaveConfig(m_UserDataBase, "usersdb.bin");
-                    tcp.SendData(m_UserDataBase.GetListUserInfo(), "", ProtocolOfExchange.AddUserOK, null);
+                    NetworkTransferObjects obj = new NetworkTransferObjects();
+                        obj.ListUserInfo = m_UserDataBase.GetListUserInfo();
+                    tcp.SendData(obj, ProtocolOfExchange.AddUserOK);
                 }
             }
-            if(e.sendInfo.ProtocolMsg == ProtocolOfExchange.TryAuth)
+            if(e.SendInfo.ProtocolMsg == ProtocolOfExchange.TryAuth)
             {
-                AuthInfo authinfo = (AuthInfo)e.Object;
+                AuthInfo authinfo = e.NetDataObj.AuthInfo;
                 if (m_UserDataBase.IsUserAuth(authinfo.UserId, authinfo.Password))
                 {
-                    tcp.SendData(m_UserDataBase.GetUserObject(authinfo.UserId), "", ProtocolOfExchange.AuthOk, authinfo);
+                    NetworkTransferObjects obj = new NetworkTransferObjects();
+                    obj.User = (m_UserDataBase.GetUserObject(authinfo.UserId));
+                    obj.AuthInfo = authinfo;
+                    tcp.SendData(obj, ProtocolOfExchange.AuthOk);
                 }
                 else
                 {
-                    tcp.SendData(null, "", ProtocolOfExchange.AuthFail, null);
+                    tcp.SendData(null, ProtocolOfExchange.AuthFail);
                 }
             }
-            if(e.sendInfo.ProtocolMsg== ProtocolOfExchange.NewMessages)
+            if(e.SendInfo.ProtocolMsg== ProtocolOfExchange.NewMessages)
             {
 
-                object[] obj = (object[])e.Object;
-                List<UserInfo> toList = (List<UserInfo>)obj[0];
-
-                foreach(UserInfo to in toList)
+                //object[] obj = (object[])e.NetDataObj
+                List<Message> toList = e.NetDataObj.ListMessages;
+                
+                foreach(Message to in toList)
                 {
-                    m_MessageDataBase.NewMessage(new Message(obj[1].ToString(), new UserInfo((User)e.sendInfo.InfoObject), to));
+                    //UserInfo userFrom = new UserInfo(((User)e.sendInfo.InfoObject).Id, ((User)e.sendInfo.InfoObject).IdParent, ((User)e.sendInfo.InfoObject).FullName, ((User)e.sendInfo.InfoObject).PostName);
+                    m_MessageDataBase.NewMessage(to);
+                    Console.WriteLine("Получено сообщение от " + to.FromId + "для" + to.ToId);
                 }
 
                 //m_MessageDataBase.NewMessage(new Message())
             }
-            if (e.sendInfo.ProtocolMsg == ProtocolOfExchange.SyncMessages)
+            if (e.SendInfo.ProtocolMsg == ProtocolOfExchange.SyncMessages)
             {
-                List<Message> result = null;
+                if (m_UserDataBase.IsUserAuth(e.NetDataObj.AuthInfo))
+                {
+                    NetworkTransferObjects obj = new NetworkTransferObjects();
+                    List<Message> inbox = m_MessageDataBase.SyncMessages(e.NetDataObj.UserInfo, e.NetDataObj.MessageUids, false);
+                   
+                   
+                    obj.AuthInfo = e.NetDataObj.AuthInfo;
+                    foreach (Message m in inbox)
+                    {
+                        obj.Message = m;
+                        tcp.SendData(obj, ProtocolOfExchange.SyncMessages);
+                        Thread.Sleep(20);
+                    }
+                    List<Message> outbox = m_MessageDataBase.SyncMessages(e.NetDataObj.UserInfo, e.NetDataObj.MessageUids_1, true);
+                    obj.Message = null;
+                    foreach (Message m in outbox)
+                    {
+                        obj.Message_1 = m;
+                        tcp.SendData(obj, ProtocolOfExchange.SyncMessages);
+                        Thread.Sleep(20);
+                    }
 
-                if (e.sendInfo.message == "from")
-                    m_MessageDataBase.SyncMessages( new UserInfo((User)e.sendInfo.InfoObject), (string[])e.Object, true);
-                else
-                    m_MessageDataBase.SyncMessages(new UserInfo((User)e.sendInfo.InfoObject), (string[])e.Object, false);
-
-                tcp.SendData(result, "", ProtocolOfExchange.SyncMessages, null);
-
+                }
+            }
+            if(e.SendInfo.ProtocolMsg == ProtocolOfExchange.MessageRead)
+            {
+                m_MessageDataBase.MessageReaded(e.NetDataObj.UserInfo, e.NetDataObj.MessageUids[0]);
             }
 
                 /*if (e.sendInfo.message == "File")

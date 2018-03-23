@@ -81,6 +81,7 @@
             // 
             // attachmentsListBox
             // 
+            this.attachmentsListBox.AllowDrop = true;
             this.attachmentsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.attachmentsListBox.FormattingEnabled = true;
@@ -88,6 +89,8 @@
             this.attachmentsListBox.Name = "attachmentsListBox";
             this.attachmentsListBox.Size = new System.Drawing.Size(140, 407);
             this.attachmentsListBox.TabIndex = 4;
+            this.attachmentsListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.attachmentsListBox_DragDrop);
+            this.attachmentsListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.attachmentsListBox_DragEnter);
             // 
             // label1
             // 

@@ -53,7 +53,7 @@ namespace CoreLib
                 userMessagaes = (List<Message>)Func.LoadConfig(@"Messages\To\" + user.Id.ToString() + ".bin");
 
             if (userMessagaes == null)
-                return null;
+                return new List<Message>();
 
             List<Message> return_list = new List<Message>();
 
@@ -79,9 +79,7 @@ namespace CoreLib
                         return_list.Add(msg);
                 }
             }
-            if (return_list.Count == 0)
-                return null;
-            else
+         
                 return return_list;
 
         }
@@ -93,12 +91,12 @@ namespace CoreLib
         /// <param name="usrTo">Пользователь прочитавший сообщение</param>
         /// <param name="msgUid">id сообщения</param>
         /// <returns></returns>
-        public bool MessageReaded(UserInfo usrTo, string msgUid)
+        public void MessageReaded(UserInfo usrTo, string msgUid)
         {
             //
             List<Message>userMessagaes = (List<Message>)Func.LoadConfig(@"Messages\To\" + usrTo.Id.ToString() + ".bin");
             if (userMessagaes == null)
-                return false;
+                return ;
 
             foreach(Message msg in userMessagaes)
             {
@@ -109,7 +107,7 @@ namespace CoreLib
                     //получаем исходящие сообщения пользователя, который отправлял сообщение 
                     List<Message> userMessagefrom = (List<Message>)Func.LoadConfig(@"Messages\From\" + msg.FromId.Id.ToString() + ".bin");
                     if (userMessagefrom == null)
-                        return false;
+                        return;
                     /////////////////
                     bool is_msgfromFind = false;
                     foreach (Message msgfrom in userMessagefrom)
@@ -125,7 +123,7 @@ namespace CoreLib
 
                     }
                     if (!is_msgfromFind)
-                        return false;
+                        return ;
                     
                     ///////////
                     msg.IsReaded = true;
@@ -134,10 +132,10 @@ namespace CoreLib
                     //////////////////
 
                     
-                    return true;
+                   
                 }
             }
-            return false;
+           
 
         }
 
