@@ -65,7 +65,11 @@ namespace CoreLib
         public event ReceiveEventHandler Receive;
 
         #endregion
-
+        private bool m_ErrorOutputConsose;
+        public TcpModule(bool err_output_console)
+        {
+            m_ErrorOutputConsose = err_output_console;
+        }
 
         #region Объявления членов класса
 
@@ -308,7 +312,10 @@ namespace CoreLib
         {
             Console.Beep(3000, 30);
             Console.Beep(1000, 30);
-            MessageBox.Show(err);
+            if (!m_ErrorOutputConsose)
+                MessageBox.Show(err);
+            else
+                Console.WriteLine(err);
         }
 
         #endregion
