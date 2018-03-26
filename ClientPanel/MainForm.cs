@@ -30,7 +30,7 @@ namespace ClientPanel
         public MainForm()
         {
             InitializeComponent();
-            m_TcpClient = new TcpModule();
+            m_TcpClient = new TcpModule(false);
             m_TcpClient.Connected += M_TcpClient_Connected;
             m_TcpClient.Disconnected += M_TcpClient_Disconnected;
             m_TcpClient.Receive += M_TcpClient_Receive;
@@ -228,7 +228,7 @@ namespace ClientPanel
         {
             if (!m_IsConnectedToServer)
             {
-                m_TcpClient = new TcpModule();
+                m_TcpClient = new TcpModule(false);
                 m_TcpClient.Connected += M_TcpClient_Connected;
                 m_TcpClient.Receive += M_TcpClient_Receive;
                 m_TcpClient.Disconnected += M_TcpClient_Disconnected;               

@@ -15,7 +15,7 @@ namespace Server
         static MessageDataBase m_MessageDataBase;
         static void Main(string[] args)
         {
-            m_Tcp = new TcpModule();
+            m_Tcp = new TcpModule(true);
             m_Tcp.Accept += M_Tcp_Accept;
             m_Tcp.Connected += M_Tcp_Connected;
             m_Tcp.Disconnected += M_Tcp_Disconnected;
