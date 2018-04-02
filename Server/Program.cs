@@ -5,21 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NetworkLib;
 
 namespace Server
 {
     class Program
     {
-        static TcpModule m_Tcp;
+        static TcpModuleServer m_Tcp;
         static UsersDataBase m_UserDataBase;
         static MessageDataBase m_MessageDataBase;
         static void Main(string[] args)
         {
-            m_Tcp = new TcpModule(true);
-            m_Tcp.Accept += M_Tcp_Accept;
-            m_Tcp.Connected += M_Tcp_Connected;
-            m_Tcp.Disconnected += M_Tcp_Disconnected;
-            m_Tcp.Receive += M_Tcp_Receive;
+            m_Tcp = new TcpModuleServer();
+           
+           
+          
+            m_Tcp.Recieved += M_Tcp_Receive;
+            m_Tcp.Error += M_Tcp_Error;
             m_Tcp.StartServer(2727);
 
 
@@ -37,49 +39,62 @@ namespace Server
             Console.Read();
         }
 
-        private static void M_Tcp_Receive(object sender, ReceiveEventArgs e)
+        private static void M_Tcp_Error(object sender, EventArgs e)
         {
-            TcpModule tcp = (TcpModule)sender;
-            if(e.SendInfo.ProtocolMsg == ProtocolOfExchange.CheckConnection)
+            Console.WriteLine(sender.ToString());
+         //   throw new NotImplementedException();
+        }
+
+        private static void M_Tcp_Receive(object sender, SocketData d)
+        {
+            NetworkTransferObjects e = (NetworkTransferObjects)sender;
+            if(e.ProtocolMessage == ProtocolOfExchange.CheckConnection)
             {
-                tcp.SendData(null, ProtocolOfExchange.CheckConnectionOK);
+                NetworkTransferObjects obj = new NetworkTransferObjects();
+                obj.ProtocolMessage = ProtocolOfExchange.CheckConnectionOK;
+                m_Tcp.Send(d.Socket,obj);
             }
-            if(e.SendInfo.ProtocolMsg== ProtocolOfExchange.AskUserInfoList)
+            if(e.ProtocolMessage == ProtocolOfExchange.AskUserInfoList)
             {
                 NetworkTransferObjects obj = new NetworkTransferObjects();
                 obj.ListUserInfo = m_UserDataBase.GetListUserInfo();
-                tcp.SendData(obj, ProtocolOfExchange.UserInfoListOk);
+                obj.ProtocolMessage = ProtocolOfExchange.UserInfoListOk;
+                m_Tcp.Send(d.Socket, obj);
             }
-            if(e.SendInfo.ProtocolMsg== ProtocolOfExchange.AddUser)
+            if(e.ProtocolMessage == ProtocolOfExchange.AddUser)
             {
-                if(m_UserDataBase.Add(e.NetDataObj.User))
+                if(m_UserDataBase.Add(e.User))
                 {
                     Func.SaveConfig(m_UserDataBase, "usersdb.bin");
                     NetworkTransferObjects obj = new NetworkTransferObjects();
                         obj.ListUserInfo = m_UserDataBase.GetListUserInfo();
-                    tcp.SendData(obj, ProtocolOfExchange.AddUserOK);
+                    obj.ProtocolMessage = ProtocolOfExchange.AddUserOK;
+                    m_Tcp.Send(d.Socket, obj);
                 }
             }
-            if(e.SendInfo.ProtocolMsg == ProtocolOfExchange.TryAuth)
+            if(e.ProtocolMessage == ProtocolOfExchange.TryAuth)
             {
-                AuthInfo authinfo = e.NetDataObj.AuthInfo;
+                AuthInfo authinfo = e.AuthInfo;
                 if (m_UserDataBase.IsUserAuth(authinfo.UserId, authinfo.Password))
                 {
                     NetworkTransferObjects obj = new NetworkTransferObjects();
                     obj.User = (m_UserDataBase.GetUserObject(authinfo.UserId));
                     obj.AuthInfo = authinfo;
-                    tcp.SendData(obj, ProtocolOfExchange.AuthOk);
+                    obj.ProtocolMessage = ProtocolOfExchange.AuthOk;
+                    m_Tcp.Send(d.Socket, obj);
                 }
                 else
                 {
-                    tcp.SendData(null, ProtocolOfExchange.AuthFail);
+                    NetworkTransferObjects obj = new NetworkTransferObjects();
+                    obj.ProtocolMessage = ProtocolOfExchange.AuthFail;
+                    m_Tcp.Send(d.Socket, obj);
                 }
             }
-            if(e.SendInfo.ProtocolMsg== ProtocolOfExchange.NewMessages)
+            if(e.ProtocolMessage == ProtocolOfExchange.NewMessages)
             {
 
                 //object[] obj = (object[])e.NetDataObj
-                List<Message> toList = e.NetDataObj.ListMessages;
+                List<Message> toList = e.ListMessages;
                 
                 foreach(Message to in toList)
                 {
@@ -90,35 +105,36 @@ namespace Server
 
                 //m_MessageDataBase.NewMessage(new Message())
             }
-            if (e.SendInfo.ProtocolMsg == ProtocolOfExchange.SyncMessages)
+            if (e.ProtocolMessage == ProtocolOfExchange.SyncMessages)
             {
-                if (m_UserDataBase.IsUserAuth(e.NetDataObj.AuthInfo))
+                if (m_UserDataBase.IsUserAuth(e.AuthInfo))
                 {
                     NetworkTransferObjects obj = new NetworkTransferObjects();
-                    List<Message> inbox = m_MessageDataBase.SyncMessages(e.NetDataObj.UserInfo, e.NetDataObj.MessageUids, false);
+                    List<Message> inbox = m_MessageDataBase.SyncMessages(e.UserInfo, e.MessageUids, false);
                    
                    
-                    obj.AuthInfo = e.NetDataObj.AuthInfo;
+                    obj.AuthInfo = e.AuthInfo;
+                    obj.ProtocolMessage = ProtocolOfExchange.SyncMessages;
                     foreach (Message m in inbox)
                     {
                         obj.Message = m;
-                        tcp.SendData(obj, ProtocolOfExchange.SyncMessages);
+                        m_Tcp.Send(d.Socket, obj);
                         Thread.Sleep(20);
                     }
-                    List<Message> outbox = m_MessageDataBase.SyncMessages(e.NetDataObj.UserInfo, e.NetDataObj.MessageUids_1, true);
+                    List<Message> outbox = m_MessageDataBase.SyncMessages(e.UserInfo, e.MessageUids_1, true);
                     obj.Message = null;
                     foreach (Message m in outbox)
                     {
                         obj.Message_1 = m;
-                        tcp.SendData(obj, ProtocolOfExchange.SyncMessages);
+                        m_Tcp.Send(d.Socket, obj);
                         Thread.Sleep(20);
                     }
 
                 }
             }
-            if(e.SendInfo.ProtocolMsg == ProtocolOfExchange.MessageRead)
+            if(e.ProtocolMessage == ProtocolOfExchange.MessageRead)
             {
-                m_MessageDataBase.MessageReaded(e.NetDataObj.UserInfo, e.NetDataObj.MessageUids[0]);
+                m_MessageDataBase.MessageReaded(e.UserInfo, e.MessageUids[0]);
             }
 
                 /*if (e.sendInfo.message == "File")
@@ -147,7 +163,7 @@ namespace Server
         private static void M_Tcp_Accept(object sender)
         {
             // TcpModule tcp = (TcpModule)sender;
-            Console.WriteLine("Клиент подключился: " +  ((TcpModule)sender).ToString());
+           // Console.WriteLine("Клиент подключился: " +  ((TcpModule)sender).ToString());
         }
     }
 }

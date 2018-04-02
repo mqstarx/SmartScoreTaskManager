@@ -19,7 +19,7 @@ namespace CoreLib
         private List<Message> m_ListMessages;
         private List<Message> m_ListMessages_1;
         private User m_User;
-        
+        private ProtocolOfExchange m_ProtocolMessage;
 
         public AuthInfo AuthInfo
         {
@@ -148,6 +148,19 @@ namespace CoreLib
             set
             {
                 m_Message_1 = value;
+            }
+        }
+
+        public ProtocolOfExchange ProtocolMessage
+        {
+            get
+            {
+                return m_ProtocolMessage;
+            }
+
+            set
+            {
+                m_ProtocolMessage = value;
             }
         }
 

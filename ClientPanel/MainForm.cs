@@ -10,13 +10,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using NetworkLib;
 
 namespace ClientPanel
 {
     public partial class MainForm : Form
     {
-        private TcpModule m_TcpClient;
+        private TcpModuleClient m_TcpClient;
         private string m_ServerIp="192.168.100.13";
         private bool m_IsConnectedToServer;
         private int m_TcpPort = 2727;
@@ -30,10 +30,10 @@ namespace ClientPanel
         public MainForm()
         {
             InitializeComponent();
-            m_TcpClient = new TcpModule(false);
+            m_TcpClient = new TcpModuleClient();
+            m_TcpClient.Error += M_TcpClient_Error;
+            m_TcpClient.Recieved += M_TcpClient_Receive;
             m_TcpClient.Connected += M_TcpClient_Connected;
-            m_TcpClient.Disconnected += M_TcpClient_Disconnected;
-            m_TcpClient.Receive += M_TcpClient_Receive;
             m_inbox = new List<CoreLib.Message>();
             m_outbox = new List<CoreLib.Message>();
 
@@ -41,7 +41,21 @@ namespace ClientPanel
             ///
 
         }
+
+       
+
+        private void M_TcpClient_Error(object sender, EventArgs e)
+        {
+           
+        }
         #region Работа с сетью
+
+        private void M_TcpClient_Connected(object sender, EventArgs e)
+        {
+            SendReqest(ProtocolOfExchange.CheckConnection, new NetworkTransferObjects());
+            TimeOutTimer.Start();
+        }
+
         private void TimeOutTimer_Tick(object sender, EventArgs e)
         {
             ConnectToServer();
@@ -51,38 +65,39 @@ namespace ClientPanel
             ConnectToServer();
         }
         //оброботка входящих данных из сети
-        private void M_TcpClient_Receive(object sender, ReceiveEventArgs e)
+        private void M_TcpClient_Receive(object sender,SocketData tcp)
         {
-            TcpModule tcp = (TcpModule)sender;
+            // TcpModule tcp = (TcpModule)sender;
+            NetworkTransferObjects obj = (NetworkTransferObjects)sender;
             //проверка соединения
-            if (e.SendInfo.ProtocolMsg ==  ProtocolOfExchange.CheckConnectionOK)
+            if (obj.ProtocolMessage==  ProtocolOfExchange.CheckConnectionOK)
             {
                 m_IsConnectedToServer = true;
                 this.Invoke((new Action(() => connectionStatusLabel.BackColor = Color.Green)));
                 TimeOutTimer.Stop();
-                SendReqest(ProtocolOfExchange.AskUserInfoList, new NetworkTransferObjects(),tcp);
+                SendReqest(ProtocolOfExchange.AskUserInfoList, new NetworkTransferObjects());
                 
 
             }
             //получение списка пользователей для выбора при авторизации
-            if(e.SendInfo.ProtocolMsg== ProtocolOfExchange.UserInfoListOk)
+            if(obj.ProtocolMessage == ProtocolOfExchange.UserInfoListOk)
             {
-                m_UserInfoArray = (List<UserInfo>)e.NetDataObj.ListUserInfo;
+                m_UserInfoArray = (List<UserInfo>)obj.ListUserInfo;
                 this.Invoke((new Action(() => UserListRecieved())));
                 
 
             }
 
-            if(e.SendInfo.ProtocolMsg == ProtocolOfExchange.AuthOk)
+            if(obj.ProtocolMessage == ProtocolOfExchange.AuthOk)
             {
-                m_CurrentUser = e.NetDataObj.User;
-                m_CurrentAuth = e.NetDataObj.AuthInfo;
+                m_CurrentUser = obj.User;
+                m_CurrentAuth = obj.AuthInfo;
                 this.Invoke((new Action(() => MessageBox.Show("Вы авторизированы"))));
                 this.Invoke((new Action(() => this.Text=m_CurrentUser.FullName)));
                 this.Invoke((new Action(() => SyncTimer_Tick(null,null))));
                 this.Invoke((new Action(() => SyncTimer.Start())));
             }
-            if (e.SendInfo.ProtocolMsg == ProtocolOfExchange.AuthFail)
+            if (obj.ProtocolMessage == ProtocolOfExchange.AuthFail)
             {
                 this.Invoke((new Action(() => UserListRecieved())));
             }
@@ -90,14 +105,14 @@ namespace ClientPanel
            /* if (e.sendInfo.ProtocolMsg== ProtocolOfExchange.AddUserOK)
                 this.Invoke((new Action(() => MessageBox.Show("UserAdded"))));*/
 
-            if(e.SendInfo.ProtocolMsg== ProtocolOfExchange.SyncMessages)
+            if(obj.ProtocolMessage == ProtocolOfExchange.SyncMessages)
             {
-                if (e.NetDataObj.AuthInfo.UserId == m_CurrentUser.Id)
+                if (obj.AuthInfo.UserId == m_CurrentUser.Id)
                 {
-                    if(e.NetDataObj.Message!=null)
-                        m_inbox.Add(e.NetDataObj.Message);
-                    if(e.NetDataObj.Message_1!=null)
-                        m_outbox.Add(e.NetDataObj.Message_1);
+                    if(obj.Message!=null)
+                        m_inbox.Add(obj.Message);
+                    if(obj.Message_1!=null)
+                        m_outbox.Add(obj.Message_1);
                     this.Invoke((new Action(() => SyncMessageInbox())));
                 }
             }
@@ -183,7 +198,7 @@ namespace ClientPanel
             {
                 NetworkTransferObjects obj = new NetworkTransferObjects();
                 obj.AuthInfo = new AuthInfo(((UserInfo)authForm.userCmb.SelectedItem).Id, authForm.passwordTxb.Text);
-                SendReqest(ProtocolOfExchange.TryAuth,obj, m_TcpClient);
+                SendReqest(ProtocolOfExchange.TryAuth,obj);
             }
             else if (dr == DialogResult.No)
                 this.Close();
@@ -200,45 +215,31 @@ namespace ClientPanel
             ConnectToServer();
         }
 
-        private void M_TcpClient_Connected(object sender, string result)
-        {
-            if (result == "OK")
-            {
+       
 
-                SendReqest(ProtocolOfExchange.CheckConnection, null, (TcpModule)sender);
-                TimeOutTimer.Start();
-
-            }
-            if (result == "ERR")
-            {
-                ConnectToServer();
-            }
-        }
-
-        private void SendReqest(ProtocolOfExchange req, NetworkTransferObjects obj  ,TcpModule tcp)
+        private void SendReqest(ProtocolOfExchange req, NetworkTransferObjects obj )
         {
             if (m_IsConnectedToServer || req == ProtocolOfExchange.CheckConnection)
             {
-                tcp.SendData(obj, req);
+                obj.ProtocolMessage = req;
+                m_TcpClient.Send(obj);
             }
 
         }
 
         private void ConnectToServer()
         {
-            if (!m_IsConnectedToServer)
+            if (!m_IsConnectedToServer )
             {
-                m_TcpClient = new TcpModule(false);
-                m_TcpClient.Connected += M_TcpClient_Connected;
-                m_TcpClient.Receive += M_TcpClient_Receive;
-                m_TcpClient.Disconnected += M_TcpClient_Disconnected;               
-                m_TcpClient.ConnectClient(m_ServerIp,m_TcpPort);
+                m_TcpClient.Connect(m_ServerIp, m_TcpPort);
+                
             }
+           
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            m_TcpClient.CloseSocket();
+           
         }
         #endregion
 
@@ -265,7 +266,7 @@ namespace ClientPanel
         {
             NetworkTransferObjects obj = new NetworkTransferObjects();
             obj.ListMessages = (List<CoreLib.Message>)sender;
-            SendReqest(ProtocolOfExchange.NewMessages, obj, m_TcpClient);
+            SendReqest(ProtocolOfExchange.NewMessages, obj);
 
         }
 
@@ -292,7 +293,7 @@ namespace ClientPanel
             obj.MessageUids_1 = uids_1.ToArray();
             obj.UserInfo = m_CurrentUser.GetInfo();
             obj.AuthInfo = m_CurrentAuth;
-            SendReqest(ProtocolOfExchange.SyncMessages, obj,  m_TcpClient);
+            SendReqest(ProtocolOfExchange.SyncMessages, obj);
         }
         private void inboxRadioBtn_CheckedChanged(object sender, EventArgs e)
         {
@@ -336,7 +337,7 @@ namespace ClientPanel
                     break;
                 }
             }
-            SendReqest(ProtocolOfExchange.MessageRead, obj,m_TcpClient);
+            SendReqest(ProtocolOfExchange.MessageRead, obj);
 
         }
 
