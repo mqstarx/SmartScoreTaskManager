@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -166,5 +168,33 @@ namespace CoreLib
 
         public NetworkTransferObjects()
         { }
+        public static NetworkTransferObjects GetObjectFromArray(byte[] data)
+        {
+            BinaryFormatter _bf = new BinaryFormatter();
+            // _bf.TypeFormat = System.Runtime.Serialization.Formatters.FormatterTypeStyle.XsdString;
+            MemoryStream _ms = new MemoryStream(data.Length);
+            _ms.Write(data, 0, data.Length);
+            _ms.Position = 0;
+            object res = _bf.Deserialize(_ms);
+
+            _ms.Close();
+            return (NetworkTransferObjects)res;
+
+        }
+
+        public byte[] GetByteArray()
+        {
+            BinaryFormatter _bf = new BinaryFormatter();
+            //_bf.TypeFormat = System.Runtime.Serialization.Formatters.FormatterTypeStyle.XsdString;
+            MemoryStream _ms = new MemoryStream();
+            _bf.Serialize(_ms, this);
+            byte[] res = new byte[_ms.Length];
+            _ms.Position = 0;
+            _ms.Read(res, 0, res.Length);
+            _ms.Close();
+
+            // object test = ObjectFromByteArray(res,0,res.Length);
+            return res;
+        }
     }
 }

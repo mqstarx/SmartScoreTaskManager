@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NetworkLib;
+using System.Net;
 
 namespace ClientPanel
 {
@@ -19,7 +20,7 @@ namespace ClientPanel
         private TcpModuleClient m_TcpClient;
         private string m_ServerIp="192.168.100.13";
         private bool m_IsConnectedToServer;
-        private int m_TcpPort = 2727;
+        private int m_TcpPort = 5454;
         private List<UserInfo> m_UserInfoArray;
         private AuthInfo m_CurrentAuth;
         private User m_CurrentUser;
@@ -31,9 +32,9 @@ namespace ClientPanel
         {
             InitializeComponent();
             m_TcpClient = new TcpModuleClient();
-            m_TcpClient.Error += M_TcpClient_Error;
-            m_TcpClient.Recieved += M_TcpClient_Receive;
             m_TcpClient.Connected += M_TcpClient_Connected;
+            m_TcpClient.Recieved += M_TcpClient_Receive;
+           
             m_inbox = new List<CoreLib.Message>();
             m_outbox = new List<CoreLib.Message>();
 
@@ -42,30 +43,30 @@ namespace ClientPanel
 
         }
 
-       
 
-        private void M_TcpClient_Error(object sender, EventArgs e)
-        {
-           
-        }
+
+
+
+
         #region Работа с сетью
+
 
         private void M_TcpClient_Connected(object sender, EventArgs e)
         {
             SendReqest(ProtocolOfExchange.CheckConnection, new NetworkTransferObjects());
             TimeOutTimer.Start();
         }
-
         private void TimeOutTimer_Tick(object sender, EventArgs e)
         {
-            ConnectToServer();
+          //  ConnectToServer();
         }
         private void MainForm_Shown(object sender, EventArgs e)
         {
             ConnectToServer();
+           
         }
         //оброботка входящих данных из сети
-        private void M_TcpClient_Receive(object sender,SocketData tcp)
+        private void M_TcpClient_Receive(object sender, SocketData s)
         {
             // TcpModule tcp = (TcpModule)sender;
             NetworkTransferObjects obj = (NetworkTransferObjects)sender;
@@ -240,6 +241,7 @@ namespace ClientPanel
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
            
+            
         }
         #endregion
 

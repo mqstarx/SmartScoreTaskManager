@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NetworkLib;
-
 namespace Server
 {
     class Program
@@ -21,8 +20,8 @@ namespace Server
            
           
             m_Tcp.Recieved += M_Tcp_Receive;
-            m_Tcp.Error += M_Tcp_Error;
-            m_Tcp.StartServer(2727);
+            m_Tcp.Error += M_Tcp_Error1;
+            m_Tcp.StartServer(5454);
 
 
             m_UserDataBase = (UsersDataBase)Func.LoadConfig("usersdb.bin");
@@ -39,27 +38,34 @@ namespace Server
             Console.Read();
         }
 
+        private static void M_Tcp_Error1(object sender, EventArgs e)
+        {
+            Console.WriteLine(sender.ToString());
+        }
+
+       
+
         private static void M_Tcp_Error(object sender, EventArgs e)
         {
             Console.WriteLine(sender.ToString());
          //   throw new NotImplementedException();
         }
 
-        private static void M_Tcp_Receive(object sender, SocketData d)
+        private static void M_Tcp_Receive(object sender, SocketData m)
         {
             NetworkTransferObjects e = (NetworkTransferObjects)sender;
             if(e.ProtocolMessage == ProtocolOfExchange.CheckConnection)
             {
                 NetworkTransferObjects obj = new NetworkTransferObjects();
                 obj.ProtocolMessage = ProtocolOfExchange.CheckConnectionOK;
-                m_Tcp.Send(d.Socket,obj);
+                m_Tcp.Send(m.Socket,obj);
             }
             if(e.ProtocolMessage == ProtocolOfExchange.AskUserInfoList)
             {
                 NetworkTransferObjects obj = new NetworkTransferObjects();
                 obj.ListUserInfo = m_UserDataBase.GetListUserInfo();
                 obj.ProtocolMessage = ProtocolOfExchange.UserInfoListOk;
-                m_Tcp.Send(d.Socket, obj);
+                m_Tcp.Send(m.Socket, obj);
             }
             if(e.ProtocolMessage == ProtocolOfExchange.AddUser)
             {
@@ -69,7 +75,7 @@ namespace Server
                     NetworkTransferObjects obj = new NetworkTransferObjects();
                         obj.ListUserInfo = m_UserDataBase.GetListUserInfo();
                     obj.ProtocolMessage = ProtocolOfExchange.AddUserOK;
-                    m_Tcp.Send(d.Socket, obj);
+                    m_Tcp.Send(m.Socket, obj);
                 }
             }
             if(e.ProtocolMessage == ProtocolOfExchange.TryAuth)
@@ -81,22 +87,22 @@ namespace Server
                     obj.User = (m_UserDataBase.GetUserObject(authinfo.UserId));
                     obj.AuthInfo = authinfo;
                     obj.ProtocolMessage = ProtocolOfExchange.AuthOk;
-                    m_Tcp.Send(d.Socket, obj);
+                    m_Tcp.Send(m.Socket, obj);
                 }
                 else
                 {
                     NetworkTransferObjects obj = new NetworkTransferObjects();
                     obj.ProtocolMessage = ProtocolOfExchange.AuthFail;
-                    m_Tcp.Send(d.Socket, obj);
+                    m_Tcp.Send(m.Socket, obj);
                 }
             }
             if(e.ProtocolMessage == ProtocolOfExchange.NewMessages)
             {
 
                 //object[] obj = (object[])e.NetDataObj
-                List<Message> toList = e.ListMessages;
+                List<CoreLib.Message> toList = e.ListMessages;
                 
-                foreach(Message to in toList)
+                foreach(CoreLib.Message to in toList)
                 {
                     //UserInfo userFrom = new UserInfo(((User)e.sendInfo.InfoObject).Id, ((User)e.sendInfo.InfoObject).IdParent, ((User)e.sendInfo.InfoObject).FullName, ((User)e.sendInfo.InfoObject).PostName);
                     m_MessageDataBase.NewMessage(to);
@@ -110,23 +116,23 @@ namespace Server
                 if (m_UserDataBase.IsUserAuth(e.AuthInfo))
                 {
                     NetworkTransferObjects obj = new NetworkTransferObjects();
-                    List<Message> inbox = m_MessageDataBase.SyncMessages(e.UserInfo, e.MessageUids, false);
+                    List<CoreLib.Message> inbox = m_MessageDataBase.SyncMessages(e.UserInfo, e.MessageUids, false);
                    
                    
                     obj.AuthInfo = e.AuthInfo;
                     obj.ProtocolMessage = ProtocolOfExchange.SyncMessages;
-                    foreach (Message m in inbox)
+                    foreach (CoreLib.Message msg in inbox)
                     {
-                        obj.Message = m;
-                        m_Tcp.Send(d.Socket, obj);
+                        obj.Message = msg;
+                        m_Tcp.Send(m.Socket, obj);
                         Thread.Sleep(20);
                     }
-                    List<Message> outbox = m_MessageDataBase.SyncMessages(e.UserInfo, e.MessageUids_1, true);
+                    List<CoreLib.Message> outbox = m_MessageDataBase.SyncMessages(e.UserInfo, e.MessageUids_1, true);
                     obj.Message = null;
-                    foreach (Message m in outbox)
+                    foreach (CoreLib.Message msg in outbox)
                     {
-                        obj.Message_1 = m;
-                        m_Tcp.Send(d.Socket, obj);
+                        obj.Message_1 = msg;
+                        m_Tcp.Send(m.Socket, obj);
                         Thread.Sleep(20);
                     }
 
