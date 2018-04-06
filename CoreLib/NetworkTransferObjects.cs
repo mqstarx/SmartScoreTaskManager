@@ -22,7 +22,7 @@ namespace CoreLib
         private List<Message> m_ListMessages_1;
         private User m_User;
         private ProtocolOfExchange m_ProtocolMessage;
-
+        private byte[] m_Data;
         public AuthInfo AuthInfo
         {
             get
@@ -163,6 +163,19 @@ namespace CoreLib
             set
             {
                 m_ProtocolMessage = value;
+            }
+        }
+
+        public byte[] Data
+        {
+            get
+            {
+                return m_Data;
+            }
+
+            set
+            {
+                m_Data = value;
             }
         }
 

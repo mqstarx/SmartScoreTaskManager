@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Drawing;
 
 namespace CoreLib
 {
@@ -16,6 +17,7 @@ namespace CoreLib
         
         private string m_FileName;
 
+        private UserFileInfo m_UserFileInfo;
         public UserFile(string path)
         {
             FileInfo info = new FileInfo(path);
@@ -27,6 +29,7 @@ namespace CoreLib
                     FileStream streamReader = new FileStream(path, FileMode.Open, FileAccess.Read);
                     streamReader.Read(m_FileData, 0, m_FileData.Length);
                     m_FileName = info.Name;
+                    m_UserFileInfo = new UserFileInfo(m_FileName, Icon.ExtractAssociatedIcon(path));
                 }
                 catch
                 {
@@ -34,6 +37,16 @@ namespace CoreLib
                 }
             }
         }
+
+        public UserFileInfo UserFileInfo
+        {
+            get
+            {
+
+                return m_UserFileInfo;
+            }
+        }
+
 
         /// <summary>
         /// для тестирования максимального размера файла

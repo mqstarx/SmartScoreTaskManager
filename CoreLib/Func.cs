@@ -40,7 +40,33 @@ namespace CoreLib
 
 
         }
-       
+        public static bool SaveFile(string filename,byte[] data)
+        {
+            FileStream fs = null;
+            try
+            {
+
+                if (!Directory.Exists(Path.GetDirectoryName(Application.StartupPath + @"\" + filename)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(Application.StartupPath + @"\" + filename));
+                fs = new FileStream(Application.StartupPath + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.Write);
+                fs.Write(data, 0, data.Length);
+                fs.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                if (fs != null)
+                    fs.Close();
+                return false;
+            }
+            finally
+            {
+                if (fs != null)
+                    fs.Close();
+            }
+
+
+        }
         public static object LoadConfig(string filename)
         {
             FileStream fs = null;
@@ -52,6 +78,33 @@ namespace CoreLib
                 object res = bf.Deserialize(fs);
                 fs.Close();
                 return res;
+            }
+            catch (Exception e)
+            {
+                if (fs != null)
+                    fs.Close();
+                return null;
+            }
+            finally
+            {
+                if (fs != null)
+                    fs.Close();
+            }
+
+
+        }
+        public static byte[] LoadFile(string filename)
+        {
+
+            FileStream fs = null;
+            try
+            {
+
+                fs = new FileStream(Application.StartupPath + @"\" + filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                byte[] result = new byte[fs.Length];
+                fs.Read(result, 0, result.Length);
+                fs.Close();
+                return result;
             }
             catch (Exception e)
             {

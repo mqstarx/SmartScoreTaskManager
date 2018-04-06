@@ -11,7 +11,7 @@ namespace CoreLib
     public class Message
     {
         private string m_Msg;
-        private FileAttachments m_FileAttachments;
+        private FileAttachmentsInfo m_FileAttachmentsInfo;
         private bool m_IsReaded;
         private bool m_IsSync;
         private UserInfo m_FromId;
@@ -35,16 +35,16 @@ namespace CoreLib
             }
         }
 
-        public FileAttachments FileAttachments
+        public FileAttachmentsInfo FileAttachmentsInfo
         {
             get
             {
-                return m_FileAttachments;
+                return m_FileAttachmentsInfo;
             }
 
             set
             {
-                m_FileAttachments = value;
+                m_FileAttachmentsInfo = value;
             }
         }
 

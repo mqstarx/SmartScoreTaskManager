@@ -12,9 +12,13 @@ namespace CoreLib
     {
         private const int MAX_LEN = 26214400;
         private List<UserFile> m_Files;
+        private FileAttachmentsInfo m_AttachInfo;
+       
+
         public FileAttachments()
         {
             m_Files = new List<UserFile>();
+            m_AttachInfo = new FileAttachmentsInfo();
         }
         public UserFile this[int index]
         {
@@ -47,7 +51,9 @@ namespace CoreLib
             {
                 if (m_Files == null)
                     m_Files = new List<UserFile>();
-                m_Files.Add(new UserFile(path));
+                UserFile _file = new UserFile(path);
+                m_Files.Add(_file);
+                m_AttachInfo.FilesInfo.Add(_file.UserFileInfo);
                 return true;
             }
         }
@@ -61,6 +67,7 @@ namespace CoreLib
                 if (m_Files == null)
                     m_Files = new List<UserFile>();
                 m_Files.Add(file);
+                m_AttachInfo.FilesInfo.Add(file.UserFileInfo);
                 return true;
             }
         }
@@ -114,17 +121,43 @@ namespace CoreLib
         {
             if (m_Files != null)
             {
+                bool is_delete_file=false;
+                bool is_delete_fileinfo=false;
                 foreach (UserFile uf in m_Files)
                 {
                     if (uf.FileName == filename)
                     {
                         m_Files.Remove(uf);
-                        return true;
+                        is_delete_file = true;
+                        break;        
                     }
                 }
+                foreach (UserFileInfo uf in m_AttachInfo.FilesInfo)
+                {
+                    if (uf.FileName == filename)
+                    {
+                        m_AttachInfo.FilesInfo.Remove(uf);
+                        is_delete_fileinfo = true;
+                        break;
+                    }
+                }
+                if (is_delete_file && is_delete_fileinfo)
+                    return true;
+
             }
             return false;
         }
+       /* public bool RemoveFiles(string[] filenames)
+        {
+            if(m_Files!=null)
+            {
+                for(int i=0;i<filenames.Length;i++)
+                {
+
+                }
+            }
+
+        }*/
 
         public int Count
         {
@@ -133,6 +166,17 @@ namespace CoreLib
                 return m_Files.Count;
             }
         }
-       
+
+        public FileAttachmentsInfo AttachInfo
+        {
+            get
+            {
+                return m_AttachInfo;
+            }
+
+           
+        }
+
+        
     }
 }

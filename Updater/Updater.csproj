@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{453AAFFD-1887-4449-8AE9-7FA1C2AEF446}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{099390F3-4F6E-4B4D-8318-2670099BFA7D}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CoreLib</RootNamespace>
-    <AssemblyName>CoreLib</AssemblyName>
+    <RootNamespace>Updater</RootNamespace>
+    <AssemblyName>Updater</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,13 +34,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NetworkLib">
-      <HintPath>..\..\NetworkLib\NetworkLib\bin\Release\NetworkLib.dll</HintPath>
+      <HintPath>..\..\NetworkLib\NetworkLib\bin\Debug\NetworkLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,22 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AuthInfo.cs" />
-    <Compile Include="FileAttachments.cs" />
-    <Compile Include="FileAttachmentsInfo.cs" />
-    <Compile Include="Func.cs" />
-    <Compile Include="Hash.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="MessageDataBase.cs" />
-    <Compile Include="NetworkTransferObjects.cs" />
-    <Compile Include="ProtocolOfExchange.cs" />
-    <Compile Include="Task.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserFile.cs" />
-    <Compile Include="UserFileInfo.cs" />
-    <Compile Include="UserInfo.cs" />
-    <Compile Include="UsersDataBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoreLib\CoreLib.csproj">
+      <Project>{453aaffd-1887-4449-8ae9-7fa1c2aef446}</Project>
+      <Name>CoreLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

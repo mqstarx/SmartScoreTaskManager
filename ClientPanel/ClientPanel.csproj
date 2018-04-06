@@ -117,6 +117,10 @@
       <Project>{453AAFFD-1887-4449-8AE9-7FA1C2AEF446}</Project>
       <Name>CoreLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Updater\Updater.csproj">
+      <Project>{099390f3-4f6e-4b4d-8318-2670099bfa7d}</Project>
+      <Name>Updater</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\skrepka2.gif" />

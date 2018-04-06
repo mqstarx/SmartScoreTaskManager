@@ -32,6 +32,7 @@
             this.messageTxb = new System.Windows.Forms.TextBox();
             this.replyBtn = new System.Windows.Forms.Button();
             this.closeBtn = new System.Windows.Forms.Button();
+            this.file_attacmentsList = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
             // messageTxb
@@ -44,7 +45,7 @@
             this.messageTxb.Multiline = true;
             this.messageTxb.Name = "messageTxb";
             this.messageTxb.ReadOnly = true;
-            this.messageTxb.Size = new System.Drawing.Size(700, 417);
+            this.messageTxb.Size = new System.Drawing.Size(447, 417);
             this.messageTxb.TabIndex = 0;
             // 
             // replyBtn
@@ -67,11 +68,21 @@
             this.closeBtn.UseVisualStyleBackColor = true;
             this.closeBtn.Click += new System.EventHandler(this.closeBtn_Click);
             // 
+            // file_attacmentsList
+            // 
+            this.file_attacmentsList.Location = new System.Drawing.Point(455, 2);
+            this.file_attacmentsList.Name = "file_attacmentsList";
+            this.file_attacmentsList.Size = new System.Drawing.Size(235, 417);
+            this.file_attacmentsList.TabIndex = 3;
+            this.file_attacmentsList.UseCompatibleStateImageBehavior = false;
+            this.file_attacmentsList.View = System.Windows.Forms.View.SmallIcon;
+            // 
             // MessageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(702, 455);
+            this.Controls.Add(this.file_attacmentsList);
             this.Controls.Add(this.closeBtn);
             this.Controls.Add(this.replyBtn);
             this.Controls.Add(this.messageTxb);
@@ -87,5 +98,6 @@
         private System.Windows.Forms.TextBox messageTxb;
         private System.Windows.Forms.Button replyBtn;
         private System.Windows.Forms.Button closeBtn;
+        private System.Windows.Forms.ListView file_attacmentsList;
     }
 }

@@ -48,10 +48,13 @@
             this.newMessageBtn = new System.Windows.Forms.Button();
             this.TasksPage = new System.Windows.Forms.TabPage();
             this.SyncTimer = new System.Windows.Forms.Timer(this.components);
+            this.properties_tab = new System.Windows.Forms.TabPage();
+            this.check_newVersion = new System.Windows.Forms.Button();
             this.statusStrip.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.MessagesTab.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.properties_tab.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip
@@ -82,6 +85,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl.Controls.Add(this.MessagesTab);
             this.tabControl.Controls.Add(this.TasksPage);
+            this.tabControl.Controls.Add(this.properties_tab);
             this.tabControl.Location = new System.Drawing.Point(0, 1);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
@@ -220,6 +224,26 @@
             this.SyncTimer.Interval = 2000;
             this.SyncTimer.Tick += new System.EventHandler(this.SyncTimer_Tick);
             // 
+            // properties_tab
+            // 
+            this.properties_tab.Controls.Add(this.check_newVersion);
+            this.properties_tab.Location = new System.Drawing.Point(4, 22);
+            this.properties_tab.Name = "properties_tab";
+            this.properties_tab.Size = new System.Drawing.Size(1110, 521);
+            this.properties_tab.TabIndex = 2;
+            this.properties_tab.Text = "Настройки";
+            this.properties_tab.UseVisualStyleBackColor = true;
+            // 
+            // check_newVersion
+            // 
+            this.check_newVersion.Location = new System.Drawing.Point(9, 4);
+            this.check_newVersion.Name = "check_newVersion";
+            this.check_newVersion.Size = new System.Drawing.Size(137, 23);
+            this.check_newVersion.TabIndex = 0;
+            this.check_newVersion.Text = "Проверить обновление";
+            this.check_newVersion.UseVisualStyleBackColor = true;
+            this.check_newVersion.Click += new System.EventHandler(this.check_newVersion_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -237,6 +261,7 @@
             this.MessagesTab.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.properties_tab.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -261,5 +286,7 @@
         private System.Windows.Forms.ColumnHeader dateColumn;
         private System.Windows.Forms.ColumnHeader FilesColumn;
         private System.Windows.Forms.Timer SyncTimer;
+        private System.Windows.Forms.TabPage properties_tab;
+        private System.Windows.Forms.Button check_newVersion;
     }
 }

@@ -28,6 +28,8 @@ namespace ClientPanel
         private List<CoreLib.Message> m_inbox;
         private List<CoreLib.Message> m_outbox;
 
+       
+
         public MainForm()
         {
             InitializeComponent();
@@ -71,31 +73,31 @@ namespace ClientPanel
             // TcpModule tcp = (TcpModule)sender;
             NetworkTransferObjects obj = (NetworkTransferObjects)sender;
             //проверка соединения
-            if (obj.ProtocolMessage==  ProtocolOfExchange.CheckConnectionOK)
+            if (obj.ProtocolMessage == ProtocolOfExchange.CheckConnectionOK)
             {
                 m_IsConnectedToServer = true;
                 this.Invoke((new Action(() => connectionStatusLabel.BackColor = Color.Green)));
                 TimeOutTimer.Stop();
                 SendReqest(ProtocolOfExchange.AskUserInfoList, new NetworkTransferObjects());
-                
+
 
             }
             //получение списка пользователей для выбора при авторизации
-            if(obj.ProtocolMessage == ProtocolOfExchange.UserInfoListOk)
+            if (obj.ProtocolMessage == ProtocolOfExchange.UserInfoListOk)
             {
                 m_UserInfoArray = (List<UserInfo>)obj.ListUserInfo;
                 this.Invoke((new Action(() => UserListRecieved())));
-                
+
 
             }
 
-            if(obj.ProtocolMessage == ProtocolOfExchange.AuthOk)
+            if (obj.ProtocolMessage == ProtocolOfExchange.AuthOk)
             {
                 m_CurrentUser = obj.User;
                 m_CurrentAuth = obj.AuthInfo;
                 this.Invoke((new Action(() => MessageBox.Show("Вы авторизированы"))));
-                this.Invoke((new Action(() => this.Text=m_CurrentUser.FullName)));
-                this.Invoke((new Action(() => SyncTimer_Tick(null,null))));
+                this.Invoke((new Action(() => this.Text = m_CurrentUser.FullName)));
+                this.Invoke((new Action(() => SyncTimer_Tick(null, null))));
                 this.Invoke((new Action(() => SyncTimer.Start())));
             }
             if (obj.ProtocolMessage == ProtocolOfExchange.AuthFail)
@@ -103,22 +105,33 @@ namespace ClientPanel
                 this.Invoke((new Action(() => UserListRecieved())));
             }
             //временно
-           /* if (e.sendInfo.ProtocolMsg== ProtocolOfExchange.AddUserOK)
-                this.Invoke((new Action(() => MessageBox.Show("UserAdded"))));*/
+            /* if (e.sendInfo.ProtocolMsg== ProtocolOfExchange.AddUserOK)
+                 this.Invoke((new Action(() => MessageBox.Show("UserAdded"))));*/
 
-            if(obj.ProtocolMessage == ProtocolOfExchange.SyncMessages)
+            if (obj.ProtocolMessage == ProtocolOfExchange.SyncMessages)
             {
                 if (obj.AuthInfo.UserId == m_CurrentUser.Id)
                 {
-                    if(obj.Message!=null)
+                    if (obj.Message != null)
                         m_inbox.Add(obj.Message);
-                    if(obj.Message_1!=null)
+                    if (obj.Message_1 != null)
                         m_outbox.Add(obj.Message_1);
                     this.Invoke((new Action(() => SyncMessageInbox())));
                 }
             }
+            if (obj.ProtocolMessage == ProtocolOfExchange.NewVersionClientNone)
+            {
+                this.Invoke((new Action(() => MessageBox.Show("Нет новых обновлений"))));
 
+            }
+            if (obj.ProtocolMessage == ProtocolOfExchange.NewVersionClientOk)
+            {
+                this.Invoke((new Action(() => System.Diagnostics.Process.Start("Updater.exe", m_ServerIp + " 5454"))));
+                this.Invoke((new Action(() => this.Close())));
+               
+               
 
+            }
         }
 
         //заполняет лист в соответствии с параметрами
@@ -158,7 +171,7 @@ namespace ClientPanel
                    
                    
 
-                    if (msg.FileAttachments != null)
+                    if (msg.FileAttachmentsInfo != null)
                     {
                         strItems[3] = "+";
                     }
@@ -343,15 +356,21 @@ namespace ClientPanel
 
         }
 
-
-
-
-        #endregion
-
         private void SyncTimer_Tick(object sender, EventArgs e)
         {
             SyncMessageBtn_Click(null, null);
         }
+
+
+        #endregion
+
+
+        #region Настройки
+        private void check_newVersion_Click(object sender, EventArgs e)
+        {
+            SendReqest(ProtocolOfExchange.AskNewVersionClient, new NetworkTransferObjects());
+        }
+        #endregion
     }
     // Implements the manual sorting of items by columns.
     class ListViewDateComparer : IComparer

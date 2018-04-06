@@ -37,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.attachItemsListViev = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
             // userListTree
@@ -65,7 +66,7 @@
             this.messageTxb.Location = new System.Drawing.Point(295, 51);
             this.messageTxb.Multiline = true;
             this.messageTxb.Name = "messageTxb";
-            this.messageTxb.Size = new System.Drawing.Size(285, 434);
+            this.messageTxb.Size = new System.Drawing.Size(225, 434);
             this.messageTxb.TabIndex = 2;
             // 
             // SendMessageBtn
@@ -85,9 +86,9 @@
             this.attachmentsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.attachmentsListBox.FormattingEnabled = true;
-            this.attachmentsListBox.Location = new System.Drawing.Point(586, 50);
+            this.attachmentsListBox.Location = new System.Drawing.Point(526, 50);
             this.attachmentsListBox.Name = "attachmentsListBox";
-            this.attachmentsListBox.Size = new System.Drawing.Size(140, 407);
+            this.attachmentsListBox.Size = new System.Drawing.Size(118, 407);
             this.attachmentsListBox.TabIndex = 4;
             this.attachmentsListBox.DragDrop += new System.Windows.Forms.DragEventHandler(this.attachmentsListBox_DragDrop);
             this.attachmentsListBox.DragEnter += new System.Windows.Forms.DragEventHandler(this.attachmentsListBox_DragEnter);
@@ -120,11 +121,20 @@
             this.label3.TabIndex = 8;
             this.label3.Text = "Получатели:";
             // 
+            // attachItemsListViev
+            // 
+            this.attachItemsListViev.Location = new System.Drawing.Point(650, 51);
+            this.attachItemsListViev.Name = "attachItemsListViev";
+            this.attachItemsListViev.Size = new System.Drawing.Size(71, 406);
+            this.attachItemsListViev.TabIndex = 9;
+            this.attachItemsListViev.UseCompatibleStateImageBehavior = false;
+            // 
             // NewMessageForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(738, 497);
+            this.Controls.Add(this.attachItemsListViev);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -152,5 +162,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListView attachItemsListViev;
     }
 }
